@@ -3,7 +3,7 @@ package training;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class Saidaichi {
@@ -17,72 +17,102 @@ public class Saidaichi {
 
 	}
 
-	public static void Saidaichi(int num, String str) {
+	public static void Saidaichi(int a, String b) {
 
-		//最大値変数
 		int max = 0;
 		int cpr = 0;
-		//配列に一文字ずつ格納（String）
-		String[] temp = str.split("");
-		//int型に直して別のint型配列に再格納
-		int[] orary = new int[temp.length];
-		//抽出桁数
-		int[] ber = new int[num];
-		//ans配列
+		int dig = a;
 		ArrayList<Integer> ans = new ArrayList<Integer>();
 
-		//配列の中身をint型に変換
-		for (int i = 0; i < temp.length; i++) {
-			orary[i] = Integer.parseInt(temp[i]);
+		//string配列をIntegerListに
+		String[] temp = b.split("");
+		List<Integer> ary = new ArrayList<Integer>();
+		for (String j : temp) {
+			ary.add(Integer.parseInt(j));
 		}
-		//
-		System.out.println(Arrays.toString(orary));
 
-		//探索処理
-		for (int k = 0; k < orary.length - ber.length; k++) {
-			//
-			System.out.println(Arrays.toString(orary));
-			for (int l = 0, m = k, n = ber.length; l < ber.length; l++, m++, n--) {
-				ber[l] = orary[m] * (int) Math.pow(10, n);
+		//処理
+		for (int i = 0; i < ary.size(); i++) {
+			//先頭が0ならremove
+			while (ary.get(0) == 0) {
+				ary.remove(0);
 			}
-			for (int o = 0; o < ber.length; o++) {
-				max += ber[o];
+			//添字保存用変数を用意
+			int x = 0;
+			//max格納
+			for (int k = 0, l = dig - 1; k < dig; k++, l--) {
+				max = max + ary.get(k) * (int) Math.pow(10, l);
 			}
-			if (k != 0) {
-				//次の数字。上と違うのはkの初期値に+1してるだけ
-				for (int l = 0, m = k + 1, n = ber.length; l < ber.length; l++, m++, n--) {
-					ber[l] = orary[m] * (int)Math.pow(10, n);
+
+			for (int j = 0; j < ary.size() - dig + 1; j++) {
+				//比較するN桁をcprに格納する
+				//cpr初期化
+				cpr = 0;
+				//cpr格納
+				if (ary.size() >= dig) {
+					for (int m = j, n = dig - 1; m < j + dig; m++, n--) {
+						cpr = cpr + ary.get(m) * (int) Math.pow(10, n);
+					}
+				} else {
+					//ary配列がN桁数未満
+					for (int m = ary.size() -1, n = 0; n <  dig; m--, n++) {
+						max = max + ary.get(m) * (int) Math.pow(10, n);
+					}
 				}
-				for (int o = 0; o < ber.length; o++) {
-					cpr += ber[o];
-				}
+				//cprがmaxより大きければ交換
 				if (max < cpr) {
 					max = cpr;
-					for (int m = k + 1; m < ber.length; m++) {
-						orary[m] = 99;
-					}
-					//nullを詰める
-					remove(orary, ber.length);
+					//交換した場所の添字を保存
+					x = j;
 				}
+
+				//確認
+				System.out.println("\n" + "max " + max);
+				System.out.println("cpr " + cpr);
+				for (Integer st : ary) {
+					System.out.print(st + "ary");
+				}
+				System.out.println("\n");
+				for (Integer tr : ans) {
+					System.out.print(tr + "ans");
+				}
+
 			}
+			//ans配列にmax格納
 			ans.add(max);
-		}
 
-		for (int z = 0; z < ans.size(); z++) {
-			System.out.println(ans.get(z));
-		}
-
-	}
-
-	public static int[] remove(int[] input, int num) {
-		for (int p = 0; p < input.length; p++) {
-			if (input[p] == 99) {
-				for (int q = p; q < input.length; q++) {
-					input[q] = input[q + 1];
+			//交換したとこをremove
+			if (x != 0) {
+				for (int o = 0; o < dig; o++) {
+					ary.remove(x);
+					ary.size();
 				}
 			}
+
+			//確認
+			for (Integer st : ary) {
+				System.out.print(st + " ");
+			}
+			System.out.println();
+
+			//maxとcprを初期化
+			max = 0;
+			cpr = 0;
 		}
-		int[] output = new int[input.length - num];
-		return output;
+
+		//結果出力
+		for (Integer z : ans) {
+			System.out.print(z + "z");
+		}
+		
 	}
 }
+
+//ary.size() != 0
+
+//比べた数字が(cpr)maxより大きかった場合の処理
+//xに見つかったときの先頭の番号を格納、桁数分removeする
+
+//次の数字をcprに格納し順次比較、maxより大きければmaxに格納、
+//そうでなかったらスルーするメソッド
+//maxに格納した場合、その値が入っていた配列を削除し、配列を短縮するメソッド
